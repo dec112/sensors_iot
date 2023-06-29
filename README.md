@@ -2,8 +2,13 @@
 Sensors/smart devices for IoT integration
 
 ## Resources
-* Project description: https://www.netidee.at/dec4iot    
+* Project description: https://www.netidee.at/dec4iot
 
+* bangle-js: https://github.com/dec112/sensors_iot/tree/main/bangle-js
+* esp32: https://github.com/dec112/sensors_iot/tree/main/esp32
+* onboarding-android: https://github.com/dec112/sensors_iot/tree/main/onboarding-android
+* puck-js: https://github.com/dec112/sensors_iot/tree/main/puck-js
+  
 &nbsp;    
 
 ## Issues
