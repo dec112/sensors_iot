@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name" translatable="false">dec4IoT Onboarding</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">dec4IoT Onboarding</string>
+
+    <!-- Fragment Labels -->
+    <string name="qr_fragment_label">Scan your QR Code</string>
+    <string name="qr_success_fragment_label">QR Code scan result</string>
+    <string name="bangle_js_fragment_label">Setup your Bangle.Js</string>
+    <string name="fragment_puckjs">Puck.Js Detection</string>
+    <string name="puckjs_writing_fragment_label">Writing data …</string>
+    <string name="done_fragment_label">You\'re done! 🥳</string>
+
+    <!-- First Fragment -->
+    <string name="next">Start</string>
+    <string name="lorem_ipsum">Welcome to dec4IoT.\n\nI should put a text explaining the project here, but I unfortunately do not have it.</string>
+    <string name="from_bangle">Welcome to dec4IoT.\n\nYou started this App via Bangle.js, now you will be able to set it up for dec4IoT as well!</string>
+    <string name="settings_btn">Settings</string>
+    <string name="settings_desc">To modify the settings of your Bangle.js, press the button above!</string>
+
+    <!-- Modules Check -->
+    <string name="action_check_modules">Check for Modules</string>
+    <string name="modules_available_toast">Modules Available! 🥳</string>
+    <string name="modules_unavailable_toast">Modules Unavailable! 😭</string>
+
+    <!-- Permissions Check -->
+    <string name="action_check_permissions">Check for Permissions</string>
+    <string name="action_check_backgroundloc_permissions">Check for Location Permissions</string>
+    <string name="permissions_granted">Permissions granted! 🥳</string>
+    <string name="permission_not_granted_no_continue">Some permissions were not granted. Please restart the app, grant ALL permissions and try again! 😭</string>
+    <string name="why_we_need_perm_bgloc">Background location is required for emergencies from Bangle.js</string>
+    <string name="action_check_battery_optimisation">Check for Battery Optimisations</string>
+    <string name="bat_optim_off">Battery Optimisations disabled! 🥳</string>
+
+    <!-- Wrong QR Code -->
+    <string name="qr_no_support">QR code not created by dec4IoT!</string>
+    <string name="qr_no_support_button">Try again</string>
+
+    <!-- Select your Device -->
+    <string name="select_model">Select your device</string>
+    <string name="select_banglejs">Bangle.Js</string>
+    <string name="select_puckjs">Puck.Js</string>
+
+    <!-- Puck JS Detection -->
+    <string name="choose_puckjs">Your Puck.JS will start rotating colours. If it doesn\'t, you chose the wrong device.\nPlease choose your device and press continue!</string>
+    <string name="continue_puckjs">Continue</string>
+
+    <!-- Bangle JS not here msgs -->
+    <string name="h_no_banglejs">You cannot setup Bangle.js here!</string>
+    <string name="m_tutorial_banglejs"><b>To setup Bangle.js complete the following instructions:</b>\n1. <a href="https://espruino.com/Gadgetbridge">Setup your Bangle.js with Gadgetbridge</a> (complete "How to setup" and "Extra setup")\n2. Click on the "gear" icon next to your device in Gadgetbridge\n3. Enable "Allow Internet Access"\n4. Enable "Allow Intents"\n5. Click "App loader URL" and enter the URL provided to you!\n6. Go back\n7. Install the "dec4IoT Companion" from the App loader (the Icon with 9 squares)\n8. Start the app on Bangle.js!</string>
+
+    <!-- Device Detection -->
+    <string name="selected_device">Selected Device: %s</string>
+    <string name="no_dec4iot_devicedetection">This device cannot be programmed for use in Dec4IoT</string>
+    <string name="no_device_selected_stop">Please select a device before continuing!</string>
+
+    <!-- Data Writing -->
+    <string name="the_following_will_be_written">The following data will be written to %s</string>
+    <string name="sensor_id_to_be_written">Sensor ID: %s</string>
+    <string name="api_endpoint_to_be_written">API Endpoint:\n%s</string>
+    <string name="please_confirm_dont_be_stupid_puckjs">Please double and/or triple check, that these are the correct values. If not, please restart the Onboarding-process. Writing these values correctly now is a lot easier than having to do this again with an added 15 seconds time constraint!</string>
+    <string name="please_confirm_dont_be_stupid_banglejs">Please double and/or triple check, that these are the correct values. If not, please restart the Onboarding-process. Writing these values correctly now is a lot easier than having to do this again later!</string>
+    <string name="i_have_confirmed">I have checked that all values are correct</string>
+    <string name="restart_btn">Restart</string>
+    <string name="continue_btn">Continue</string>
+    <string name="please_confirm_all_data">Please confirm the information above!</string>
+
+    <!-- other -->
+    <string name="something_went_wrong">Something went wrong! Hang tight, we\'re working on fixing it!</string>
+    <string name="not_like_this_bangle">Bangle.Js setup not here!</string>
+
+    <!-- Done -->
+    <string name="congratulations_text">You\'re done! Your device has been onboarded to dec4IoT.\n\nPlease restart your device.\nTo restart your Puck.Js take the battery out of it\'s compartment, wait 10 seconds and put it back in!\nTo restart your Bangle.Js press the button until \"Reloading…\" appears!\n\nHave fun!</string>
+    <string name="done_btn">Setup new device</string>
+
+
+</resources>

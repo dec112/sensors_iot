@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="run.jkdev.dec4iot.jetpack.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/QrScanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/QrScanFragment"
+        android:name="run.jkdev.dec4iot.jetpack.QrScanFragment"
+        android:label="@string/qr_fragment_label"
+        tools:layout="@layout/fragment_qrscanner">
+        <action
+            android:id="@+id/action_QrScanFragment_to_QrSuccessFragment"
+            app:destination="@id/qrSuccessFragment" />
+        <argument
+            android:name="fromIntent"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/qrSuccessFragment"
+        android:name="run.jkdev.dec4iot.jetpack.QrSuccessFragment"
+        android:label="@string/qr_success_fragment_label"
+        tools:layout="@layout/fragment_qr_success">
+        <argument
+            android:name="qr_res"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_qrSuccessFragment_to_QrScanFragment2"
+            app:destination="@id/QrScanFragment"
+            app:popUpTo="@id/qrSuccessFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="qr_res"
+                android:defaultValue="null" />
+        </action>
+        <action
+            android:id="@+id/action_qrSuccessFragment_to_bangleJsFragment"
+            app:destination="@id/BangleJsNotLikeThis" />
+        <action
+            android:id="@+id/action_qrSuccessFragment_to_puckJsFragment"
+            app:destination="@id/puckJsFragment" />
+        <argument
+            android:name="fromIntent"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/BangleJsNotLikeThis"
+        android:name="run.jkdev.dec4iot.jetpack.BangleJsNotLikeThisFragment"
+        android:label="@string/bangle_js_fragment_label"
+        tools:layout="@layout/fragment_bangle_js_not_here" >
+        <argument
+            android:name="sensorId"
+            app:argType="string" />
+        <argument
+            android:name="endpoint"
+            app:argType="string" />
+        <argument
+            android:name="fromIntent"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_BangleJsNotLikeThis_to_onboardingDone"
+            app:destination="@id/onboardingDone" />
+    </fragment>
+    <fragment
+        android:id="@+id/puckJsFragment"
+        android:name="run.jkdev.dec4iot.jetpack.PuckJsDetectionFragment"
+        android:label="@string/fragment_puckjs"
+        tools:layout="@layout/fragment_puck_js_detection">
+        <argument
+            android:name="sensorId"
+            app:argType="string" />
+        <argument
+            android:name="endpoint"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_puckJsFragment_to_puckJsWritingFragment"
+            app:destination="@id/puckJsWritingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/puckJsWritingFragment"
+        android:name="run.jkdev.dec4iot.jetpack.PuckJsWritingFragment"
+        android:label="@string/puckjs_writing_fragment_label"
+        tools:layout="@layout/fragment_puck_js_writing">
+        <argument
+            android:name="sensorId"
+            app:argType="string" />
+        <argument
+            android:name="endpoint"
+            app:argType="string" />
+        <argument
+            android:name="puckJsMac"
+            app:argType="string" />
+        <argument
+            android:name="puckJsName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_puckJsWritingFragment_to_onboardingDone"
+            app:destination="@id/onboardingDone" />
+    </fragment>
+    <fragment
+        android:id="@+id/onboardingDone"
+        android:name="run.jkdev.dec4iot.jetpack.OnboardingDone"
+        android:label="@string/done_fragment_label"
+        tools:layout="@layout/fragment_onboarding_done"/>
+</navigation>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BangleJsNotLikeThisFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/writingInfo_banglejs"
+            android:layout_width="339dp"
+            android:layout_height="54dp"
+            android:text="@string/the_following_will_be_written"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.056" />
+
+        <Button
+            android:id="@+id/write_banglejs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="72dp"
+            android:backgroundTint="@color/red"
+            android:text="@string/continue_puckjs"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/valuesChecked_banglejs"
+            app:layout_constraintVertical_bias="1.0"
+            app:rippleColor="@color/red" />
+
+        <CheckBox
+            android:id="@+id/valuesChecked_banglejs"
+            android:layout_width="335dp"
+            android:layout_height="55dp"
+            android:text="@string/i_have_confirmed"
+            android:textAlignment="inherit"
+            android:textSize="15sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pleaseConfirm_banglejs"
+            app:layout_constraintVertical_bias="0.134" />
+
+        <Button
+            android:id="@+id/restart_banglejs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="72dp"
+            android:backgroundTint="@color/green"
+            android:text="@string/restart_btn"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/write_banglejs"
+            app:layout_constraintHorizontal_bias="0.193"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/valuesChecked_banglejs"
+            app:layout_constraintVertical_bias="1.0"
+            app:rippleColor="@color/green" />
+
+        <TextView
+            android:id="@+id/sensorIdToBeWritten_banglejs"
+            android:layout_width="246dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="28dp"
+            android:text="@string/sensor_id_to_be_written"
+            android:textAlignment="center"
+            android:textSize="26sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/writingInfo_banglejs"
+            app:layout_constraintVertical_bias="0.046" />
+
+        <TextView
+            android:id="@+id/apiEndpointToBeWritten_banglejs"
+            android:layout_width="346dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="36dp"
+            android:text="@string/api_endpoint_to_be_written"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sensorIdToBeWritten_banglejs"
+            app:layout_constraintVertical_bias="0.028" />
+
+        <TextView
+            android:id="@+id/pleaseConfirm_banglejs"
+            android:layout_width="369dp"
+            android:layout_height="169dp"
+            android:text="@string/please_confirm_dont_be_stupid_banglejs"
+            android:textAlignment="center"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/apiEndpointToBeWritten_banglejs"
+            app:layout_constraintVertical_bias="0.132" />
+
+        <TextView
+            android:id="@+id/no_banglejs"
+            android:layout_width="312dp"
+            android:layout_height="32dp"
+            android:text="@string/h_no_banglejs"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.21" />
+
+        <TextView
+            android:id="@+id/tutorial_banglejs"
+            android:layout_width="400dp"
+            android:layout_height="185dp"
+            android:text="@string/m_tutorial_banglejs"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.454"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sensorIdToBeWritten_banglejs"
+            app:layout_constraintVertical_bias="0.315" />
+
+        <Button
+            android:id="@+id/restart_btn_banglejs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/restart_btn"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tutorial_banglejs" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

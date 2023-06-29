@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QrSuccessFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/qrErrorDisplay"
+            android:layout_width="356dp"
+            android:layout_height="77dp"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.37" />
+
+        <Button
+            android:id="@+id/qr_returnBtn"
+            android:layout_width="139dp"
+            android:layout_height="55dp"
+            android:text="@string/qr_no_support_button"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qrErrorDisplay"
+            app:layout_constraintVertical_bias="0.145" />
+
+        <TextView
+            android:id="@+id/qrSuccessSensorId"
+            android:layout_width="294dp"
+            android:layout_height="37dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.266" />
+
+        <TextView
+            android:id="@+id/qrSuccessEndpoint"
+            android:layout_width="390dp"
+            android:layout_height="37dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qrSuccessSensorId"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/selectModelDisplay"
+            android:layout_width="306dp"
+            android:layout_height="39dp"
+            android:text="@string/select_model"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qrSuccessEndpoint"
+            app:layout_constraintVertical_bias="0.138" />
+
+        <Button
+            android:id="@+id/bangleJsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="76dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/select_banglejs"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectModelDisplay" />
+
+        <Button
+            android:id="@+id/puckJsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="56dp"
+            android:text="@string/select_puckjs"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.558"
+            app:layout_constraintStart_toEndOf="@+id/bangleJsButton"
+            app:layout_constraintTop_toBottomOf="@+id/selectModelDisplay" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

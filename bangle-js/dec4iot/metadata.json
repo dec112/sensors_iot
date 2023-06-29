@@ -1,0 +1,20 @@
+{ 
+  "id": "dec4iot",
+  "name": "dec4IoT Companion",
+  "shortName": "dec4IoT",
+  "version": "0.74",
+  "description": "Bangle.Js2 app for the dec4IoT project",
+  "icon": "app.png",
+  "tags": "",
+  "supports": ["BANGLEJS2"],  
+  "readme": "README.md",
+  "storage": [
+    { "name": "dec4iot.app.js", "url": "app.js" },
+    { "name": "dec4iot.boot.js", "url": "boot.js" },
+
+    { "name": "dec4iot.img", "url": "app-icon-mini.js", "evaluate": true },
+    
+    { "name": "dec4iot_lib_sensor", "url": "sensors.js" }
+  ],
+  "data": [{"name": "dec4iot.settings.json"}]
+}
