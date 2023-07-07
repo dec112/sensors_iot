@@ -142,7 +142,7 @@ const EspDownlink = {   // Logic to communicate with ESP32
       if(e.startsWith("__")) { return; }
       if(typeof this[e] !== "function") { return; }
 
-      this[e].bind(this);
+      this[e] = this[e].bind(this);
 
       return;
     });
