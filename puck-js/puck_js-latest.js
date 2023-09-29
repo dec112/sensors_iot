@@ -43,14 +43,6 @@ function seconds(seconds) {
   return seconds * 1000;
 }
 
-function splitUrlToPath(url) {
-  let arr = url.split("/");
-  arr.shift();
-  arr.shift();
-  arr.shift();
-  return "/" + arr.join("/");
-}
-
 // Utility Functions END ---
 // Config Functions BEGIN ---
 
@@ -308,7 +300,7 @@ function executor() {
   if(config === false) { return; }
   if(config) { CONFIG = config; }
 
-  let sendableData = `i=${CONFIG.id};e=${splitUrlToPath(CONFIG.api)}`;
+  let sendableData = `i=${CONFIG.id};e=${CONFIG.api}`;
 
   EspDownlink.addCharacteristic(SERVICE, {    // Add config characteristic
     "value": sendableData,
