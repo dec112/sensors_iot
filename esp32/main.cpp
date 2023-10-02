@@ -41,7 +41,6 @@
 #include <WiFi.h>
 
 #include "json.h"
-#include "wifiFix.h"
 
 /******************************************************************* DEFINE */
 
