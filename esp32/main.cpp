@@ -1012,7 +1012,6 @@ void setup() {
   pBLEScan->setInterval(1349);
   pBLEScan->setWindow(449);
   pBLEScan->setActiveScan(true);
-  pBLEScan->start(5, false);
 }
 
 /// @brief ESP 32 main loop
@@ -1041,12 +1040,14 @@ void loop() {
       }
     }
   }
-  // start scan after disconnect or if not connected
-  for (i = 0; i < MAX_DEVICE; i++) {
-    if (myDev[i].state == D_DISCONNECTED) {
-      Serial.printf("scanning ... [%d]\n", i);
-      BLEDevice::getScan()->start(0);
-    }
+  // start scan if we can connect a new device
+  // (after disconnect or if no device is connected)
+  int j = index_by_state(D_DISCONNECTED);
+  if (j == NO_INDEX) {
+    Serial.println("ERROR: no free index");
+  } else {
+    Serial.printf("scanning ... [%d]\n", j);
+    BLEDevice::getScan()->start(10);
   }
 
   // delay between loops
