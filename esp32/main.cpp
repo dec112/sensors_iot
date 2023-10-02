@@ -693,6 +693,7 @@ void send_json(s_device *dev, s_data *mydata) {
     client->setInsecure();
     while(1) {
       http.collectHeaders(headerKeys, headerKeysCount);
+      Serial.printf("HTTP URL: %s\n", url);
       http.begin(*client, url);
 
       http.addHeader("Content-Type", "application/json");
