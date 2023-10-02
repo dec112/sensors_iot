@@ -703,8 +703,9 @@ void send_json(s_device *dev, s_data *mydata) {
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
 
-      if (httpResponseCode == HTTP_CODE_MOVED_PERMANENTLY) {
-        url = (char*)http.header("Location").c_str();
+      if ((httpResponseCode == HTTP_CODE_MOVED_PERMANENTLY) ||
+          (httpResponseCode == HTTP_CODE_PERMANENT_REDIRECT)) {
+        url = (char *)http.header("Location").c_str();
         Serial.print("HTTP Location header: ");
         Serial.println(url);
         httpResponseCode = 0;
