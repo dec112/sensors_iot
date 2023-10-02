@@ -52,6 +52,7 @@
 #define MAX_DEVICE 4
 #define MAX_POOL 10
 #define MAX_REDIR 8
+#define MAX_ATTEMPTS 5
 #define NO_INDEX -1
 
 #define WDT_TIMEOUT 600
@@ -689,26 +690,33 @@ void send_json(s_device *dev, s_data *mydata) {
     String httpRequestData = buf;
     int httpResponseCode = 0;
     int j = 0;
+    int k = 0;
 
     client->setInsecure();
-    while(1) {
+    while (1) {
       http.collectHeaders(headerKeys, headerKeysCount);
       Serial.printf("HTTP URL: %s\n", url);
       http.begin(*client, url);
 
       http.addHeader("Content-Type", "application/json");
       http.addHeader("User-Agent", "ESP32");
-   
+
       httpResponseCode = http.POST(httpRequestData);
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
-
+      // check for redirect response
       if ((httpResponseCode == HTTP_CODE_MOVED_PERMANENTLY) ||
           (httpResponseCode == HTTP_CODE_PERMANENT_REDIRECT)) {
         url = (char *)http.header("Location").c_str();
         Serial.print("HTTP Location header: ");
         Serial.println(url);
         httpResponseCode = 0;
+        j++;
+      }
+      // retry after error
+      if (httpResponseCode < 0) {
+        url = dev->url;
+        k++;
       }
       // store url for next request
       if (httpResponseCode == HTTP_CODE_OK) {
@@ -717,16 +725,21 @@ void send_json(s_device *dev, s_data *mydata) {
       // Free resources
       http.end();
       client->stop();
-      j++;
       delay(500);
 
       // restart in case heap memory is low
-      if (httpResponseCode == -1) {
+      if (httpResponseCode == HTTPC_ERROR_CONNECTION_REFUSED) {
+        Serial.println("oom: rebooting ...");
         ESP.restart();
         break;
       }
 
-      if ((httpResponseCode == HTTP_CODE_OK) || (j == MAX_REDIR)) {
+      if (httpResponseCode == HTTP_CODE_OK) {
+        break;
+      }
+      if ((j == MAX_REDIR) || (k == MAX_ATTEMPTS)) {
+        Serial.print("sending request failed on: ");
+        Serial.println(url);
         break;
       }
     }
