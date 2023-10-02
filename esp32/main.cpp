@@ -675,6 +675,13 @@ void send_json(s_device *dev, s_data *mydata) {
     jsonb_array_pop(&b, buf, ELEMENT_SIZE);
   }
   Serial.printf("JSON:%s\n", buf);
+
+  // reconnect, if WiFi was lost
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi lost, trying to reconnect ...");
+    start_wifi();
+  }
+
   if (WiFi.status() == WL_CONNECTED) {
     char *url = dev->url;
     const char *headerKeys[] = {"Location"};
