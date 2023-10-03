@@ -26,8 +26,8 @@
 /**
  *  @file    main.cpp
  *  @author  Wolfgang Kampichler (DEC112)
- *  @date    03-2023
- *  @version 1.0
+ *  @date    10-2023
+ *  @version 1.1
  *
  *  @brief ESP32 BLE-SENML Gateway (up to 4 BLEServer)
  */
@@ -88,6 +88,7 @@ typedef struct s_device {
   int index;
   char mac[MAC_SIZE];
   char id[DATA_SIZE];
+  char url0[DATA_SIZE];
   char url[DATA_SIZE];
   BLEAdvertisedDevice *pDevice;
   BLEClient *pClient;
@@ -110,6 +111,7 @@ typedef struct {
 const char *ssid = "xxxxxx";
 const char *password = "xxxxxx";
 const char *ntpServer = "pool.ntp.org";
+
 
 const char* mozillaApi = "https://location.services.mozilla.com/v1/geolocate?key=test";
 
@@ -366,6 +368,20 @@ void set_data_url(s_device *d, char *url) {
   return;
 }
 
+/// @brief  stores initial url string to dataset
+/// @return
+void set_data_url0(s_device *d, char *url) {
+  if (url == NULL) {
+    return;
+  }
+  if (strlen(url) > DATA_SIZE - 1) {
+    return;
+  }
+  sprintf(d->url0, "%s", url);
+
+  return;
+}
+
 /// @brief  stores url and id string to dataset
 /// @return
 void set_characteristic(s_device *d, const char *s) {
@@ -404,6 +420,7 @@ void set_characteristic(s_device *d, const char *s) {
   len = strlen(s) - len;
 
   snprintf(d->url, len + strlen(URL_PREFIX), URL_PREFIX"%s", tmp);
+  snprintf(d->url0, len + strlen(URL_PREFIX), URL_PREFIX"%s", tmp);
 
   return;
 }
@@ -684,7 +701,7 @@ void send_json(s_device *dev, s_data *mydata) {
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    char *url = dev->url;
+    char *url = NULL;
     const char *headerKeys[] = {"Location"};
     const size_t headerKeysCount = sizeof(headerKeys) / sizeof(headerKeys[0]);
     String httpRequestData = buf;
@@ -695,8 +712,8 @@ void send_json(s_device *dev, s_data *mydata) {
     client->setInsecure();
     while (1) {
       http.collectHeaders(headerKeys, headerKeysCount);
-      Serial.printf("HTTP URL: %s\n", url);
-      http.begin(*client, url);
+      Serial.printf("HTTP URL: %s\n", dev->url);
+      http.begin(*client, dev->url);
 
       http.addHeader("Content-Type", "application/json");
       http.addHeader("User-Agent", "ESP32");
@@ -708,24 +725,32 @@ void send_json(s_device *dev, s_data *mydata) {
       if ((httpResponseCode == HTTP_CODE_MOVED_PERMANENTLY) ||
           (httpResponseCode == HTTP_CODE_PERMANENT_REDIRECT)) {
         url = (char *)http.header("Location").c_str();
+        if (url == NULL) {
+          url = dev->url0;
+        }
         Serial.print("HTTP Location header: ");
         Serial.println(url);
+        set_data_url(dev, url);
         httpResponseCode = 0;
         j++;
       }
-      // retry after error
-      if (httpResponseCode < 0) {
-        url = dev->url;
-        k++;
-      }
-      // store url for next request
-      if (httpResponseCode == HTTP_CODE_OK) {
-        set_data_url(dev, url);
-      }
+
       // Free resources
       http.end();
       client->stop();
       delay(500);
+
+      // done ...
+      if (httpResponseCode == HTTP_CODE_OK) {
+        break;
+      }
+
+      // retry after error; reset url
+      if (httpResponseCode < 0) {
+        url = dev->url0;
+        set_data_url(dev, url);
+        k++;
+      }
 
       // restart in case heap memory is low
       if (httpResponseCode == HTTPC_ERROR_CONNECTION_REFUSED) {
@@ -734,9 +759,7 @@ void send_json(s_device *dev, s_data *mydata) {
         break;
       }
 
-      if (httpResponseCode == HTTP_CODE_OK) {
-        break;
-      }
+      // failed on sending request
       if ((j == MAX_REDIR) || (k == MAX_ATTEMPTS)) {
         Serial.print("sending request failed on: ");
         Serial.println(url);
