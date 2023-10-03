@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -37,8 +37,8 @@
 #include <Arduino.h>
 #include <BLEDevice.h>
 #include <HTTPClient.h>
-#include <esp_task_wdt.h>
 #include <WiFi.h>
+#include <esp_task_wdt.h>
 
 #include "json.h"
 
@@ -100,9 +100,9 @@ typedef struct s_device {
 } s_device;
 
 typedef struct {
-    char lat[LOC_SIZE];
-    char lon[LOC_SIZE];
-    int accuracy = 40000;
+  char lat[LOC_SIZE];
+  char lon[LOC_SIZE];
+  int accuracy = 40000;
 } location_t;
 
 /******************************************************************* GLOBALS */
@@ -112,14 +112,13 @@ const char *ssid = "xxxxxx";
 const char *password = "xxxxxx";
 const char *ntpServer = "pool.ntp.org";
 
-
-const char* mozillaApi = "https://location.services.mozilla.com/v1/geolocate?key=test";
+const char *mozillaApi =
+    "https://location.services.mozilla.com/v1/geolocate?key=test";
 
 const long gmtOffset_sec = GMT_OFF_SEC;
 const int daylightOffset_sec = DLT_OFF_SEC;
 
 char myMacs[MAX_DEVICE][MAC_SIZE] = {MAC_1, MAC_2, MAC_3, MAC_4};
-
 
 static location_t location;
 static s_device myDev[MAX_DEVICE];
@@ -145,11 +144,12 @@ static BLEUUID movCharacteristicUUID("2c01");
 
 /// @brief  converts MAC address to string
 /// @return string
-String mac_to_string(uint8_t* macAddress) {
-  char macStr[18] = { 0 };
-  sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X", macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]);
+String mac_to_string(uint8_t *macAddress) {
+  char macStr[18] = {0};
+  sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X", macAddress[0], macAddress[1],
+          macAddress[2], macAddress[3], macAddress[4], macAddress[5]);
 
-  return  String(macStr);
+  return String(macStr);
 }
 
 /// @brief  looks for surrounding SSIDs
@@ -158,7 +158,7 @@ String get_surrounding_wifi_json() {
   String wifiArray = "[\n";
   int8_t numWifi = WiFi.scanNetworks();
 
-  for (uint8_t i = 0; i < numWifi; i++) {//numWifi; i++) {
+  for (uint8_t i = 0; i < numWifi; i++) { // numWifi; i++) {
     wifiArray += "{\"macAddress\":\"" + mac_to_string(WiFi.BSSID(i)) + "\",";
     wifiArray += "\"signalStrength\":" + String(WiFi.RSSI(i)) + ",";
     wifiArray += "\"channel\":" + String(WiFi.channel(i)) + "}";
@@ -203,7 +203,8 @@ location_t get_location() {
         int index = response.indexOf("\"lat\":");
         if (index != -1) {
           String tempStr = response.substring(index);
-          tempStr = tempStr.substring(tempStr.indexOf(":") + 1, tempStr.indexOf(","));
+          tempStr =
+              tempStr.substring(tempStr.indexOf(":") + 1, tempStr.indexOf(","));
           snprintf(location.lat, LOC_SIZE, "%s", tempStr);
           Serial.printf("Lat: %s\n", location.lat);
         }
@@ -211,7 +212,8 @@ location_t get_location() {
         index = response.indexOf("\"lng\":");
         if (index != -1) {
           String tempStr = response.substring(index);
-          tempStr = tempStr.substring(tempStr.indexOf(":") + 1, tempStr.indexOf("}"));
+          tempStr =
+              tempStr.substring(tempStr.indexOf(":") + 1, tempStr.indexOf("}"));
           snprintf(location.lon, LOC_SIZE, "%s", tempStr);
           Serial.printf("Lon: %s\n", location.lon);
         }
@@ -219,13 +221,15 @@ location_t get_location() {
         index = response.indexOf("\"accuracy\":");
         if (index != -1) {
           String tempStr = response.substring(index);
-          tempStr = tempStr.substring(tempStr.indexOf(":") + 1, tempStr.indexOf("\n"));
+          tempStr = tempStr.substring(tempStr.indexOf(":") + 1,
+                                      tempStr.indexOf("\n"));
           location.accuracy = tempStr.toFloat();
           Serial.println("Accuracy: " + String(location.accuracy) + "\n");
         }
       }
     } else {
-      Serial.printf("[HTTPS] POST... failed, error: %s\n", http.errorToString(httpResponseCode).c_str());
+      Serial.printf("[HTTPS] POST... failed, error: %s\n",
+                    http.errorToString(httpResponseCode).c_str());
     }
 
     // Free resources
@@ -368,20 +372,6 @@ void set_data_url(s_device *d, char *url) {
   return;
 }
 
-/// @brief  stores initial url string to dataset
-/// @return
-void set_data_url0(s_device *d, char *url) {
-  if (url == NULL) {
-    return;
-  }
-  if (strlen(url) > DATA_SIZE - 1) {
-    return;
-  }
-  sprintf(d->url0, "%s", url);
-
-  return;
-}
-
 /// @brief  stores url and id string to dataset
 /// @return
 void set_characteristic(s_device *d, const char *s) {
@@ -397,7 +387,7 @@ void set_characteristic(s_device *d, const char *s) {
   char *tmp = (char *)s;
   int i = 0;
 
-  while(1) {
+  while (1) {
     if ((tmp[i + 0] == 'i') && (tmp[i + 1] == '=')) {
       base = i + 2;
     }
@@ -419,8 +409,8 @@ void set_characteristic(s_device *d, const char *s) {
   tmp = (char *)s + base + len + 3;
   len = strlen(s) - len;
 
-  snprintf(d->url, len + strlen(URL_PREFIX), URL_PREFIX"%s", tmp);
-  snprintf(d->url0, len + strlen(URL_PREFIX), URL_PREFIX"%s", tmp);
+  snprintf(d->url, len + strlen(URL_PREFIX), URL_PREFIX "%s", tmp);
+  snprintf(d->url0, len + strlen(URL_PREFIX), URL_PREFIX "%s", tmp);
 
   return;
 }
@@ -752,17 +742,17 @@ void send_json(s_device *dev, s_data *mydata) {
         k++;
       }
 
-      // restart in case heap memory is low
-      if (httpResponseCode == HTTPC_ERROR_CONNECTION_REFUSED) {
-        Serial.println("oom: rebooting ...");
-        ESP.restart();
-        break;
-      }
+      // // restart in case heap memory is low
+      // if (httpResponseCode == HTTPC_ERROR_CONNECTION_REFUSED) {
+      //   Serial.println("oom: rebooting ...");
+      //   ESP.restart();
+      //   break;
+      // }
 
       // failed on sending request
       if ((j == MAX_REDIR) || (k == MAX_ATTEMPTS)) {
         Serial.print("sending request failed on: ");
-        Serial.println(url);
+        Serial.println(dev->url);
         break;
       }
     }
@@ -899,8 +889,9 @@ void connectToServer() {
     Serial.println(" - found service");
 
     // Read the value of the characteristic.
-    BLERemoteCharacteristic *pRemoteCharacteristic = pRemoteService->getCharacteristic(serviceUUID);
-    if(pRemoteCharacteristic->canRead()) {
+    BLERemoteCharacteristic *pRemoteCharacteristic =
+        pRemoteService->getCharacteristic(serviceUUID);
+    if (pRemoteCharacteristic->canRead()) {
       std::string value = pRemoteCharacteristic->readValue();
       Serial.print(" - characteristic value is: ");
       Serial.println(value.c_str());
@@ -1019,10 +1010,10 @@ void setup() {
   Serial.begin(115200);
 
   // Watchdog Konfiguration
-  //Serial.println("configuring WatchDogTimer ...");
+  // Serial.println("configuring WatchDogTimer ...");
 
-  //esp_task_wdt_init(WDT_TIMEOUT, true);        
-  //esp_task_wdt_add(NULL);
+  // esp_task_wdt_init(WDT_TIMEOUT, true);
+  // esp_task_wdt_add(NULL);
 
   Serial.printf("TIME [%.9e] HEAP [%lu] ", (long double)get_epoch_time(),
                 (unsigned long)ESP.getFreeHeap());
@@ -1088,5 +1079,5 @@ void loop() {
 
   // delay between loops
   delay(1000);
-  //esp_task_wdt_reset();
+  // esp_task_wdt_reset();
 }
