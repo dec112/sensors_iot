@@ -20,16 +20,15 @@ Do **not** change the variable/function names for [`startSetupIntent`](https://g
 #### Option 1:
 * Use a version of the [App-Loader](https://github.com/jkdev-io/BangleApps), which already has the app uploaded.
 
-#### Option 2:
+#### Option 2 (if you want to continue development):
 1. Setup a Bangle.Js Development environment
 
-    First, fork the [`espruino/BangleApps`](https://github.com/espruino/BangleApps) repository. [Setup Github Pages](https://espruino.com/Bangle.js+App+Loader#enable-github-pages). Copy the `dec4iot` folder into the `apps` folder in the forked repository. Now open your favourite code editor and do as you please.
+   First, fork the [`espruino/BangleApps`](https://github.com/espruino/BangleApps) repository. [Setup Github Pages](https://espruino.com/Bangle.js+App+Loader#enable-github-pages). Copy the `dec4iot` folder into the `apps` folder in the forked repository. Now open your favourite code editor and do as you please.
 
 2. Upload the Code onto Bangle.Js
 
-    Push your code and wait for the Pages Build to finish. After, open the Github Pages URL. Connect to your device and upload the app.
-
-### You will likely find a more updated version of this app at [jkdev-io/BangleApps](https://github.com/jkdev-io/BangleApps/tree/master/apps/dec4iot). Please copy the files from there!
+   Push your code and wait for the Pages Build to finish. After, open the Github Pages URL. Connect to your device and upload the app.
+   **You will likely find a more updated version of this app at [jkdev-io/BangleApps](https://github.com/jkdev-io/BangleApps/tree/master/apps/dec4iot). Please copy the files from there!**
 
 
 ## Contributing
