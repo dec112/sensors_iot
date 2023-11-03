@@ -181,10 +181,7 @@ const EspDownlink = {   // Logic to communicate with ESP32
   triggerUpdate: function() { this.__charUpdate(); }
 };
 
-(() => {    // Stupid JS thing
-  EspDownlink.bindMe.bind(EspDownlink);
-  EspDownlink.bindMe();
-})();
+EspDownlink.bindMe()
 
 
 const getSensorFuns = {
