@@ -4,7 +4,9 @@ This folder contains the code that needs to be installed on a Puck.JS device, to
 
 Content:
 * [Developer Information](#developer-information)
-  * [Deployment](#deployment) 
+  * [Guidelines](#guidelines)
+  * [Deployment](#deployment)
+* [Contributing](#contributing)
 * [About](#about)
 * [License](#license)
 
