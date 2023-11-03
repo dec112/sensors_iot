@@ -21,7 +21,7 @@ If you have enabled Web Bluetooth, check the page above again. Continue with pre
 
     The right side may already have some code in it. If it has, delete it.
 
-2. Now visit [this](https://github.com/dec112/dec4iot/blob/main/espruino_code/puck_js-latest.js) page. Copy all the code by pressing that button:
+2. Now visit [this](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js) page. Copy all the code by pressing that button:
 Paste it into the Web IDE.
 
     ![gh-copy](docs-assets/gh-copy.png)
