@@ -25,28 +25,28 @@ We recommend the following hardware for this project: [ESP32 NodeMCU](https://ww
 
 ### PlatformIO
 
-The ESP32 BLE/WiFi Gateway was created with [PlatformIO IDE](https://platformio.org/) (alternatively, [Arduino IDE](https://www.arduino.cc/en/software) can also be used). Besides the platform 'espressif32', the board 'nodemcu-32s' and the 'arduino' framework, no further libraries are necessary. The following additions are required:
+The ESP32 BLE/WiFi Gateway was created with [PlatformIO IDE](https://platformio.org/) and VS Code (alternatively, [Arduino IDE](https://www.arduino.cc/en/software) can also be used). Besides the platform 'espressif32', the board 'nodemcu-32s' and the 'arduino' framework, no further libraries are necessary. The following additions are required:
 
 - to support MAC in Notfiy callback, following changes are required in
 
-BLERemoteCharacteristic.h
+_BLERemoteCharacteristic.h_
 `````
 ~/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src/BLERemoteCharacteristic.h
 `````
 
-line 25, add <em>esp_bd_addr_t addr,</em>
+line 25: add <em>esp_bd_addr_t addr,</em>
 
 `````
 typedef std::function<void(BLERemoteCharacteristic* pBLERemoteCharacteristic, esp_bd_addr_t addr, uint8_t* pData, size_t length, bool isNotify)> notify_callback;
 `````
 
-BLERemoteCharacteristic.cpp
+_BLERemoteCharacteristic.cpp_
 
 `````
 ~/..platformio/packages/framework-arduinoespressif32/libraries/BLE/src/BLERemoteCharacteristic.cpp
 `````
 
-line 166, add <em>evtParam->notify.remote_bda,</em>
+line 166: add <em>evtParam->notify.remote_bda,</em>
 
 `````
 m_notifyCallback(this, evtParam->notify.remote_bda, evtParam->notify.value, evtParam->notify.value_len, evtParam->notify.is_notify);
@@ -73,3 +73,27 @@ monitor_speed = 115200
 upload_port = /dev/ttyUSB*
 board_build.partitions = huge_app.csv
 `````
+
+Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses. It is therefore necessary to store these in the source code:
+```
+// adjust this part if necessary
+#define DEV_NAME "DEC112-BLE-Client"
+#define MAC_1 "68:72:c3:eb:8e:a9"
+#define MAC_2 "d6:ea:13:f5:11:3b"
+#define MAC_3 "fa:45:e3:78:45:ad"
+#define MAC_4 "cc:e0:e7:20:43:85"
+#define URL_PREFIX "https://"
+#define GMT_OFF_SEC 3600
+#define DLT_OFF_SEC 0
+//
+```
+
+Finally, the data for the WiFi used must be entered and then the firmware can be built and uploaded. For permanent monitoring, the monitoring option from PlatformIO (VS Code) is recommended. 
+```
+// adjust this part if necessary
+const char *ssid = "xxxxxx";
+const char *password = "xxxxxx";
+const char *ntpServer = "pool.ntp.org";
+```
+
+
