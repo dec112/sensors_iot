@@ -19,11 +19,11 @@ Content:
 
 ## Developer Information
 
-### ESP32
+### ESP32-HW
 
 We recommend the following hardware for this project: [ESP32 NodeMCU](https://www.berrybase.at/esp32-nodemcu-development-board?c=2473)
 
-### PlatformIO
+### IDE
 
 The ESP32 BLE/WiFi Gateway was created with [PlatformIO IDE](https://platformio.org/) and VS Code (alternatively, [Arduino IDE](https://www.arduino.cc/en/software) can also be used). Besides the platform 'espressif32', the board 'nodemcu-32s' and the 'arduino' framework, no further libraries are necessary. The following additions are required:
 
@@ -74,7 +74,13 @@ upload_port = /dev/ttyUSB*
 board_build.partitions = huge_app.csv
 `````
 
-Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses. It is therefore necessary to store these in the source code:
+### ESP32-SW
+
+Two files in the project are sufficient to enable all functions of the ESP32 BLE/Wifi GW:
+- **json.h**: is an integrated library to provide essential JSON functionality for the project. The library was supplemented by the _jsonb_float()_ function.
+- **main.cpp**: includes ESP32 setup and loop functions as well as callback and help functions for operating the GW
+
+Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses (According to the standard, a maximum of 4 devices can be connected). It is therefore necessary to store these in the source code as shown below. In addition, a name of the GW **DEV_NAME** can be selected and an adjustment of the time zone **GMT_OFF_SEC** as well as summer or winter time **DLT_OFF_SEC** can be set
 ```
 // adjust this part if necessary
 #define DEV_NAME "DEC112-BLE-Client"
@@ -87,6 +93,7 @@ Since a connection can be initiated with any BLE device, we filter our devices (
 #define DLT_OFF_SEC 0
 //
 ```
+
 
 Finally, the data for the WiFi used must be entered and then the firmware can be built and uploaded. For permanent monitoring, the monitoring option from PlatformIO (VS Code) is recommended. 
 ```
