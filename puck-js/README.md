@@ -13,8 +13,6 @@ Content:
 
 ## User Information
 
-This code adds dec4IoT capabilities to Puck.JS
-
 Once you have setup your Puck.JS device, you'll be able to send emergency messages by pressing on or shaking it.
 
 ### Deployment
