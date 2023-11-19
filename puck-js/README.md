@@ -3,6 +3,7 @@
 This folder contains the code that needs to be installed on a Puck.JS device, to make it compatible with dec4IoT.
 
 Content:
+* [User Information](#user-information)
 * [Developer Information](#developer-information)
   * [Guidelines](#guidelines)
   * [Deployment](#deployment)
@@ -10,15 +11,21 @@ Content:
 * [About](#about)
 * [License](#license)
 
-## Developer Information
+## User Information
 
-### Guidelines
-Do **not** change the function names for [`discovery()`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js#L83C10-L83C19), [`discovered()`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js#L96C10-L96C20) and [`writeConfig()`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js#L66C10-L66C21). They are used by the Onboarding app for setup of the Puck.JS's config.
+This code adds dec4IoT capabilities to Puck.JS
+
+Once you have setup your Puck.JS device, you'll be able to send emergency messages by pressing on or shaking it.
 
 ### Deployment
 
 #### Flash the dec4IoT firmware onto Puck.JS
 There is a guide available [here](puck-setup.md)
+
+## Developer Information
+
+### Guidelines
+Do **not** change the function names for [`discovery()`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js#L83C10-L83C19), [`discovered()`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js#L96C10-L96C20) and [`writeConfig()`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck_js-latest.js#L66C10-L66C21). They are used by the Onboarding app for setup of the Puck.JS's config.
 
 ## Contributing
 
