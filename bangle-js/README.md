@@ -1,6 +1,6 @@
-# `sensors_iot/bangle-js` - dec4IoT Application for Bangle.JS
+# `sensors_iot/bangle-js` - DEC4IoT Application for Bangle.JS
 
-This folder contains the code that needs to be installed on a Bangle.JS device, to make it compatible with dec4IoT.
+This folder contains the code that needs to be installed on a Bangle.JS device, to make it compatible with DEC4IoT.
 
 Content:
 * [User Information](#user-information)
@@ -14,7 +14,7 @@ Content:
 
 ## User Information
 
-Once you have your Bangle.JS set up with dec4IoT, you will be able to send emergency messages from Bangle.JS.
+Once you have your Bangle.JS set up with DEC4IoT, you will be able to send emergency messages from Bangle.JS.
 
 To send emergency messages from your Bangle.JS, open the App from your App Loader and either the side button or the "SOS" button on the screen.
 
