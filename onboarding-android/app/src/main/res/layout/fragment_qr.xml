@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QrSuccessFragment">
+    tools:context=".QrFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             app:layout_constraintVertical_bias="0.37" />
 
         <Button
-            android:id="@+id/qr_returnBtn"
+            android:id="@+id/qr_tryAgain"
             android:layout_width="139dp"
             android:layout_height="55dp"
             android:text="@string/qr_no_support_button"

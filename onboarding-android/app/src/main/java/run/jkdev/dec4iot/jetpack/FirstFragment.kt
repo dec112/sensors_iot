@@ -31,10 +31,9 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val isFromSetupIntent: Boolean = requireActivity().intent.action == "me.byjkdev.dec4iot.intents.banglejs.SETUP"
         val isFromSettingsIntent: Boolean = requireActivity().intent.action == "me.byjkdev.dec4iot.intents.banglejs.SETTINGS"
 
-        if(isFromSetupIntent) {
+        if(requireActivity().intent.action == "me.byjkdev.dec4iot.intents.banglejs.SETUP") {
             binding.textviewFirst.text =
                 getString(R.string.from_bangle)
         } else if(isFromSettingsIntent) {
@@ -46,13 +45,10 @@ class FirstFragment : Fragment() {
         }
 
         binding.buttonFirst.setOnClickListener {
-            if(isFromSetupIntent) {
-                val act = FirstFragmentDirections.actionFirstFragmentToSecondFragment(true)
-                findNavController().navigate(act)
-            } else if(isFromSettingsIntent) {
+            if(isFromSettingsIntent) {
                 // FUTURE
             } else {
-                val act = FirstFragmentDirections.actionFirstFragmentToSecondFragment(false)
+                val act = FirstFragmentDirections.actionFirstFragmentToQrSuccessFragment2()
                 findNavController().navigate(act)
             }
         }
