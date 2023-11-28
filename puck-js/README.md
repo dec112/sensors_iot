@@ -1,6 +1,6 @@
-# `sensors_iot/puck-js` - dec4IoT Application for Puck.JS
+# `sensors_iot/puck-js` - DEC4IoT Application for Puck.JS
 
-This folder contains the code that needs to be installed on a Puck.JS device, to make it compatible with dec4IoT.
+This folder contains the code that needs to be installed on a Puck.JS device, to make it compatible with DEC4IoT.
 
 Content:
 * [User Information](#user-information)
@@ -17,7 +17,7 @@ Once you have setup your Puck.JS device, you'll be able to send emergency messag
 
 ### Deployment
 
-#### Flash the dec4IoT firmware onto Puck.JS
+#### Flash the DEC4IoT firmware onto Puck.JS
 There is a guide available [here](puck-setup.md)
 
 ## Developer Information
