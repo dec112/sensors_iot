@@ -17,7 +17,7 @@ Content:
 * Semantic Container: https://github.com/OwnYourData/semcon    
 * Blogpost on Monitoring (in German): https://www.netidee.at/dec4iot/system-monitoring-fuer-dec4iot
 
-## Developer Information
+## Developer and User Information
 
 ### ESP32-HW
 
