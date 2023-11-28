@@ -1,4 +1,4 @@
-# `sensors_iot/onboarding-android` - dec4IoT Application for Android
+# `sensors_iot/onboarding-android` - DEC4IoT Application for Android
 
 This folder contains the application that is needed to configure Bangle.JS and Puck.JS devices and to send Emergency Data from Bangle.JS 
 
@@ -13,30 +13,30 @@ Content:
 
 ## User Information
 
-This app sets up Bangle.JS and Puck.JS for the dec4IoT project, and serves as the bridge between Bangle.JS and the dec4IoT [Semantic Container](https://github.com/dec112/dc-iot).
+This app sets up Bangle.JS and Puck.JS for the DEC4IoT project, and serves as the bridge between Bangle.JS and the DEC4IoT [Semantic Container](https://github.com/dec112/dc-iot).
 
 ### Device Setup Guide
 
 **BEFORE YOU BEGIN:**
-* You need a dec4IoT Device Setup QR-Code.
+* You need a DEC4IoT Device Setup QR-Code.
 * In the 3-dot-menu, at least press "Check for Modules" and "Check for Permission". Please grant all permission requests that come up with this dialogue, as they are required for device setup
 * If you plan to use Bangle.JS: Press "Check for Location Permissions" and "Check for Battery Optimisations". Grant all of these permissions as well, otherwise Emergency Calls from your Bangle.JS might not be made properly.
-* Please also note, that Bangle.JS requires the "Bangle.JS Gadgetbridge" app to be set up on your phone. There are instructions for this in the "dec4IoT" app. As the App Loader URL in "Bangle.JS Gadgetbridge", use "https://jkdev-io.github.io/BangleApps/android.html".
+* Please also note, that Bangle.JS requires the "Bangle.JS Gadgetbridge" app to be set up on your phone. There are instructions for this in the "DEC4IoT" app. As the App Loader URL in "Bangle.JS Gadgetbridge", use "https://jkdev-io.github.io/BangleApps/android.html".
 
 **The actual guide:**
 1. Once you have everything set up, press "Start"
 2. Scan the QR-Code
 3. Choose your device.
 #### for Puck.JS
-4. Before you continue, you need to install the dec4IoT code onto your Puck.JS. Follow the instructions over at [`sensors_iot/puck-js`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck-setup.md)
-5. After doing that, the app will show your Puck.JS in a list. Press on the button that has the name of your Puck.JS. It will start rotating colours, if you set up the dec4IoT code correctly and you chose the right device.
+4. Before you continue, you need to install the DEC4IoT code onto your Puck.JS. Follow the instructions over at [`sensors_iot/puck-js`](https://github.com/dec112/sensors_iot/blob/main/puck-js/puck-setup.md)
+5. After doing that, the app will show your Puck.JS in a list. Press on the button that has the name of your Puck.JS. It will start rotating colours, if you set up the DEC4IoT code correctly and you chose the right device.
 6. Press "Continue". Your Puck.JS will stop flashing colours, and you will be presented with a new dialogue, where you need to confirm the Sensor ID and API Endpoint. Tick the checkbox if everything is right, else press the green "Restart" button.
-7. Press "Continue". You are now done, your Puck.JS should be configured for use with dec4IoT.
+7. Press "Continue". You are now done, your Puck.JS should be configured for use with DEC4IoT.
 #### for Bangle.JS
 4. Here you will find the Instructions to set up your Bangle.JS, which were referenced in the "Before you begin" section.
-5. Open up the "dec4IoT Companion" on your Bangle.JS. The Android App might automatically continue the setup process once you have done that. If not, close down the "dec4IoT" app completely, and after that, restart the "dec4IoT Companion" on your Bangle.JS
+5. Open up the "DEC4IoT Companion" on your Bangle.JS. The Android App might automatically continue the setup process once you have done that. If not, close down the "DEC4IoT" app completely, and after that, restart the "DEC4IoT Companion" on your Bangle.JS
 6. You will now be presented with a new dialogue, where you need to confirm the Sensor ID and API Endpoint. Tick the checkbox if everything is right, else press the green "Restart" button.
-7. Press "Continue". You are now done, your Bangle.JS should be configured for use with dec4IoT.
+7. Press "Continue". You are now done, your Bangle.JS should be configured for use with DEC4IoT.
    
 ## Developer Information
 
