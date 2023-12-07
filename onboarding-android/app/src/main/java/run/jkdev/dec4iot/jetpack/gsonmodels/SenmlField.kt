@@ -31,7 +31,7 @@ data class SenmlField(
     val base_name: String? = null,
 
     @SerializedName("bt")
-    var base_time: String? = null,
+    var base_time: Double? = null,
 
     @SerializedName("bu")
     val base_unit: String? = null,

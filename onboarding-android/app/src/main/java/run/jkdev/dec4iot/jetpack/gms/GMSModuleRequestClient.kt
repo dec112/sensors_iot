@@ -13,7 +13,7 @@ import run.jkdev.dec4iot.jetpack.publicApplicationContext
 
 class GMSModuleRequestClient {
     private fun getInstallClient(): ModuleInstallClient {
-        return ModuleInstall.getClient(publicApplicationContext)
+        return ModuleInstall.getClient(publicApplicationContext!!)
     }
 
     fun requestInstall(module: OptionalModuleApi) {

@@ -36,8 +36,8 @@ class PuckJsWritingFragment : Fragment() {
     private var puckJsMac: String = ""
     private var puckJsName: String = ""
 
-    private val espruino = Espruino()
     private val le = BleAdapter()
+    private val espruino = Espruino(le)
 
     private var infoTitle: TextView? = null
     private var sensorIdText: TextView? = null
@@ -46,7 +46,6 @@ class PuckJsWritingFragment : Fragment() {
     private var restartButton: Button? = null
     private var continueButton: Button? = null
 
-    private val leDevice = MutableLiveData<BluetoothDevice>()
     private var leGatt: BluetoothGatt? = null
     private var leService: BluetoothGattService? = null
     private val serviceDisc = MutableLiveData(false)
@@ -96,11 +95,6 @@ class PuckJsWritingFragment : Fragment() {
         espruino.addCallback(scanCallback)
         espruino.startScanning(puckJsMac)
 
-        leDevice.observeForever {
-            it.connectGatt(publicApplicationContext, false, gattCallback)
-            espruino.stopScanning()
-        }
-
         serviceDisc.observeForever {
             if(it == true) {
 
@@ -146,8 +140,8 @@ class PuckJsWritingFragment : Fragment() {
             txQueue.removeFirst()
 
         } else {
-            Toast.makeText(publicApplicationContext, R.string.please_confirm_all_data, Toast.LENGTH_LONG).show()
-            publicVibrator.vibrate(VibrationEffect.createOneShot(1000, 100))
+            Toast.makeText(requireActivity().applicationContext, R.string.please_confirm_all_data, Toast.LENGTH_LONG).show()
+            MainActivity.vibrator.vibrate(VibrationEffect.createOneShot(1000, 100))
         }
     }
 
@@ -159,8 +153,8 @@ class PuckJsWritingFragment : Fragment() {
         leService = null
         serviceDisc.postValue(false)
 
-        val restartIntent: Intent? = publicApplicationContext.packageManager
-            .getLaunchIntentForPackage(publicApplicationContext.packageName)
+        val restartIntent: Intent? = requireActivity().applicationContext.packageManager
+            .getLaunchIntentForPackage(requireActivity().applicationContext.packageName)
         restartIntent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(restartIntent)
     }
@@ -220,10 +214,12 @@ class PuckJsWritingFragment : Fragment() {
     }
 
     private val scanCallback = object : ScanCallback() {
+        @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
 
-            leDevice.postValue(result!!.device)
+            result!!.device.connectGatt(requireActivity().applicationContext, false, gattCallback)
+            espruino.stopScanning()
         }
 
         override fun onScanFailed(errorCode: Int) {

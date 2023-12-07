@@ -1,14 +1,25 @@
-# `sensors_iot/bangle-js` - dec4IoT Application for Bangle.JS
+# `sensors_iot/bangle-js` - DEC4IoT Application for Bangle.JS
 
-This folder contains the code that needs to be installed on a Bangle.JS device, to make it compatible with dec4IoT.
+This folder contains the code that needs to be installed on a Bangle.JS device, to make it compatible with DEC4IoT.
 
 Content:
+* [User Information](#user-information)
+  * [Deployment](#user-deployment)
 * [Developer Information](#developer-information)
   * [Guidelines](#guidelines)
-  * [Deployment](#deployment)
+  * [Deployment](#developer-deployment)
 * [Contributing](#contributing)
 * [About](#about)
 * [License](#license)
+
+## User Information
+
+Once you have your Bangle.JS set up with DEC4IoT, you will be able to send emergency messages from Bangle.JS.
+
+To send emergency messages from your Bangle.JS, open the App from your App Loader and either the side button or the "SOS" button on the screen.
+
+### User Deployment
+* Use a version of the [App-Loader](https://github.com/jkdev-io/BangleApps), which already has the app uploaded.
 
 
 ## Developer Information
@@ -16,11 +27,7 @@ Content:
 ### Guidelines
 Do **not** change the variable/function names for [`startSetupIntent`](https://github.com/jkdev-io/BangleApps/blob/master/apps/dec4iot/app.js#L65C7-L65C23), [`sendDataIntent()`](https://github.com/jkdev-io/BangleApps/blob/master/apps/dec4iot/app.js#L66C7-L66C21) and [`startLogic()`](https://github.com/jkdev-io/BangleApps/blob/master/apps/dec4iot/app.js#L67C10-L67C20). They are used by the Android app.
 
-### Deployment
-#### Option 1:
-* Use a version of the [App-Loader](https://github.com/jkdev-io/BangleApps), which already has the app uploaded.
-
-#### Option 2 (if you want to continue development):
+### Developer Deployment
 1. Setup a Bangle.Js Development environment
 
    First, fork the [`espruino/BangleApps`](https://github.com/espruino/BangleApps) repository. [Setup Github Pages](https://espruino.com/Bangle.js+App+Loader#enable-github-pages). Copy the `dec4iot` folder into the `apps` folder in the forked repository. Now open your favourite code editor and do as you please.
@@ -28,7 +35,7 @@ Do **not** change the variable/function names for [`startSetupIntent`](https://g
 2. Upload the Code onto Bangle.Js
 
    Push your code and wait for the Pages Build to finish. After, open the Github Pages URL. Connect to your device and upload the app.
-   **You will likely find a more updated version of this app at [jkdev-io/BangleApps](https://github.com/jkdev-io/BangleApps/tree/master/apps/dec4iot). Please copy the files from there!**
+   **You will likely find a more updated version of this app at [`jkdev-io/BangleApps`](https://github.com/jkdev-io/BangleApps/tree/master/apps/dec4iot). Please copy the files from there!**
 
 
 ## Contributing

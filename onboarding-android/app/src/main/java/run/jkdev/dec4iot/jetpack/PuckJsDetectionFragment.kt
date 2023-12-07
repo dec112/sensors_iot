@@ -32,8 +32,8 @@ class PuckJsDetectionFragment : Fragment() {
     private var sensorId: String = ""
     private var endpoint: String = ""
 
-    private val espruino = Espruino()
     private val le = BleAdapter()
+    private val espruino = Espruino(le)
 
     private val foundDevicesList = mutableSetOf<BluetoothDevice>()
     private val foundDevicesLiveData = MutableLiveData<MutableSet<BluetoothDevice>>()
@@ -62,7 +62,7 @@ class PuckJsDetectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.sensorId = args.sensorId
+        this.sensorId = args.sensorId.toString()
         this.endpoint = args.endpoint
 
         view.findViewById<Button>(R.id.continueButton).setOnClickListener(continueButtonListener)
@@ -104,8 +104,8 @@ class PuckJsDetectionFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private val continueButtonListener = OnClickListener {
         if(selection == null) {
-            Toast.makeText(publicApplicationContext, R.string.no_device_selected_stop, Toast.LENGTH_LONG).show()
-            publicVibrator.vibrate(VibrationEffect.createOneShot(1000, 100))
+            Toast.makeText(requireActivity().applicationContext, R.string.no_device_selected_stop, Toast.LENGTH_LONG).show()
+            MainActivity.vibrator.vibrate(VibrationEffect.createOneShot(1000, 100))
             return@OnClickListener
         }
         if(!buttonEnabled) { return@OnClickListener }
@@ -132,7 +132,7 @@ class PuckJsDetectionFragment : Fragment() {
     }
 
     private fun createNewDeviceButton(text: String, onClickListener: OnClickListener, id: Int): Button {
-        val btn = Button(publicApplicationContext)
+        val btn = Button(requireActivity().applicationContext)
 
         btn.setOnClickListener(onClickListener)
         btn.text = text
@@ -150,7 +150,7 @@ class PuckJsDetectionFragment : Fragment() {
 
         val device = deviceButtonMutableMap[btn]
         if(!le.isDeviceConnected(device!!.address)) {
-            device.connectGatt(publicApplicationContext, false, gattConnectionCallback)
+            device.connectGatt(requireActivity().applicationContext, false, gattConnectionCallback)
 
             val infoText = requireView().findViewById<TextView>(R.id.infoText_puckJs)
             infoText.textSize = 26F
@@ -200,8 +200,8 @@ class PuckJsDetectionFragment : Fragment() {
                     gatt.writeCharacteristic(characteristic, espruino.discoveryCmdPuckJs, WRITE_TYPE_NO_RESPONSE)
                 }
             } else if(status == BluetoothGatt.GATT_FAILURE) {
-                Toast.makeText(publicApplicationContext, R.string.something_went_wrong, Toast.LENGTH_LONG).show()
-                publicVibrator.vibrate(VibrationEffect.createOneShot(1000, 100))
+                Toast.makeText(requireActivity().applicationContext, R.string.something_went_wrong, Toast.LENGTH_LONG).show()
+                MainActivity.vibrator.vibrate(VibrationEffect.createOneShot(1000, 100))
             }
         }
     }
