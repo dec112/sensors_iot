@@ -8,6 +8,7 @@ Sensors/smart devices for IoT integration
 * esp32: https://github.com/dec112/sensors_iot/tree/main/esp32
 * onboarding-android: https://github.com/dec112/sensors_iot/tree/main/onboarding-android
 * puck-js: https://github.com/dec112/sensors_iot/tree/main/puck-js
+* loxone: https://github.com/dec112/sensors_iot/tree/main/loxone
   
 &nbsp;    
 
