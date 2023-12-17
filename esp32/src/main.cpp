@@ -38,6 +38,9 @@
 #include <BLEDevice.h>
 #include <HTTPClient.h>
 #include <WiFi.h>
+#include <WebServer.h>
+#include <AutoConnect.h>
+#include <AutoConnectFS.h>
 #include <esp_task_wdt.h>
 
 #include "json.h"
@@ -105,18 +108,155 @@ typedef struct {
   int accuracy = 40000;
 } location_t;
 
-/******************************************************************* GLOBALS */
+typedef struct {
+  const char* zone;
+  const char* ntpServer;
+  int8_t      tzoff;
+} Timezone_t;
 
-// adjust this part if necessary
-const char *ssid = "xxxxxx";
-const char *password = "xxxxxx";
-const char *ntpServer = "pool.ntp.org";
+static const Timezone_t TZ[] = {
+  { "Europe/London", "europe.pool.ntp.org", 0 },
+  { "Europe/Berlin", "europe.pool.ntp.org", 1 },
+  { "Europe/Helsinki", "europe.pool.ntp.org", 2 },
+  { "Europe/Moscow", "europe.pool.ntp.org", 3 },
+  { "Asia/Dubai", "asia.pool.ntp.org", 4 },
+  { "Asia/Karachi", "asia.pool.ntp.org", 5 },
+  { "Asia/Dhaka", "asia.pool.ntp.org", 6 },
+  { "Asia/Jakarta", "asia.pool.ntp.org", 7 },
+  { "Asia/Manila", "asia.pool.ntp.org", 8 },
+  { "Asia/Tokyo", "asia.pool.ntp.org", 9 },
+  { "Australia/Brisbane", "oceania.pool.ntp.org", 10 },
+  { "Pacific/Noumea", "oceania.pool.ntp.org", 11 },
+  { "Pacific/Auckland", "oceania.pool.ntp.org", 12 },
+  { "Atlantic/Azores", "europe.pool.ntp.org", -1 },
+  { "America/Noronha", "south-america.pool.ntp.org", -2 },
+  { "America/Araguaina", "south-america.pool.ntp.org", -3 },
+  { "America/Blanc-Sablon", "north-america.pool.ntp.org", -4},
+  { "America/New_York", "north-america.pool.ntp.org", -5 },
+  { "America/Chicago", "north-america.pool.ntp.org", -6 },
+  { "America/Denver", "north-america.pool.ntp.org", -7 },
+  { "America/Los_Angeles", "north-america.pool.ntp.org", -8 },
+  { "America/Anchorage", "north-america.pool.ntp.org", -9 },
+  { "Pacific/Honolulu", "north-america.pool.ntp.org", -10 },
+  { "Pacific/Samoa", "oceania.pool.ntp.org", -11 }
+};
+
+const char AUX_DEC4IOT[] PROGMEM = R"raw(
+[
+    {
+        "title": "DEC4IOT",
+        "uri": "/dec4iot",
+        "menu": true,
+        "element": [
+            {
+                "name": "caption1",
+                "type": "ACText",
+                "value": "Local time zone:",
+                "style": "font-family:Arial;font-weight:bold;text-align:center;margin-bottom:10px;color:DarkSlateBlue"
+            },
+            {
+                "name": "newline1",
+                "type": "ACElement",
+                "value": "<br>"
+            },
+            {
+                "name": "timezone",
+                "type": "ACSelect",
+                "label": "Timezone",
+                "option": [],
+                "selected": 2
+            },
+            {
+                "name": "newline2",
+                "type": "ACElement",
+                "value": "<br>"
+            },
+            {
+                "name": "caption2",
+                "type": "ACText",
+                "value": "BLE server MAC (Puck.js):",
+                "style": "font-family:Arial;font-weight:bold;text-align:center;margin-bottom:10px;color:DarkSlateBlue"
+            },
+            {
+                "name": "newline3",
+                "type": "ACElement",
+                "value": "<br>"
+            },
+            {
+                "name": "mac1",
+                "type": "ACInput",
+                "label": "MAC 1",
+                "pattern": "^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"
+            },
+            {
+                "name": "mac2",
+                "type": "ACInput",
+                "label": "MAC 2",
+                "pattern": "^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"
+            },
+            {
+                "name": "mac3",
+                "type": "ACInput",
+                "label": "MAC 3",
+                "pattern": "^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"
+            },
+            {
+                "name": "mac4",
+                "type": "ACInput",
+                "label": "MAC 4",
+                "pattern": "^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"
+            },
+            {
+                "name": "newline4",
+                "type": "ACElement",
+                "value": "<br>"
+            },
+            {
+                "name": "save",
+                "type": "ACSubmit",
+                "value": "Save",
+                "uri": "/save"
+            },
+            {
+                "name": "cancel",
+                "type": "ACSubmit",
+                "value": "Cancel",
+                "uri": "/_ac"
+            }
+        ]
+    },
+    {
+        "title": "DEC4IOT INFO",
+        "uri": "/save",
+        "menu": false,
+        "element": [
+            {
+                "name": "url",
+                "type": "ACText",
+                "style": "font-family:Arial;font-weight:bold;text-align:center;margin-bottom:10px;color:DarkSlateBlue"
+            },
+            {
+                "name": "newline",
+                "type": "ACElement",
+                "value": "<br>"
+            },
+            {
+                "name": "home",
+                "type": "ACSubmit",
+                "value": "Home",
+                "uri": "/_ac"
+            }
+        ]
+    }
+]
+)raw";
+
+/******************************************************************* GLOBALS */
 
 const char *mozillaApi =
     "https://location.services.mozilla.com/v1/geolocate?key=test";
 
-const long gmtOffset_sec = GMT_OFF_SEC;
-const int daylightOffset_sec = DLT_OFF_SEC;
+int TZindex = 0;
 
 char myMacs[MAX_DEVICE][MAC_SIZE] = {MAC_1, MAC_2, MAC_3, MAC_4};
 
@@ -125,6 +265,9 @@ static s_device myDev[MAX_DEVICE];
 static boolean doScan = false;
 static WiFiClientSecure *client;
 static HTTPClient http;
+
+AutoConnect Portal;
+AutoConnectConfig Config;
 
 // BLE Service
 // Service UUID
@@ -141,6 +284,69 @@ static BLEUUID btnCharacteristicUUID("2ae2");
 static BLEUUID movCharacteristicUUID("2c01");
 
 /***************************************************************** FUNCTIONS */
+
+/// @brief  loadOn event handler
+/// @return string
+String loadOn(AutoConnectAux& aux, PageArgument& args) {
+
+  AutoConnectSelect& tz = aux.getElement<AutoConnectSelect>("timezone");
+  
+  for (uint8_t n = 0; n < sizeof(TZ) / sizeof(Timezone_t); n++) {
+    tz.add(String(TZ[n].zone));
+  }
+
+  return String("");
+}
+
+/// @brief  saveOn event handler
+/// @return string
+String saveOn(AutoConnectAux& aux, PageArgument& args) {
+
+  AutoConnectAux* page = Portal.aux(Portal.where());
+  
+  AutoConnectInput& mac1 = page->getElement<AutoConnectInput>("mac1");
+  AutoConnectInput& mac2 = page->getElement<AutoConnectInput>("mac2");
+  AutoConnectInput& mac3 = page->getElement<AutoConnectInput>("mac3");
+  AutoConnectInput& mac4 = page->getElement<AutoConnectInput>("mac4");
+
+  if (mac1.value)
+    memcpy(myMacs[0], (const char*)mac1.value.c_str(), MAC_SIZE);
+  if (mac2.value)
+    memcpy(myMacs[1], (const char*)mac2.value.c_str(), MAC_SIZE);
+  if (mac2.value)
+    memcpy(myMacs[2], (const char*)mac3.value.c_str(), MAC_SIZE);
+  if (mac3.value)
+    memcpy(myMacs[3], (const char*)mac4.value.c_str(), MAC_SIZE);
+
+  AutoConnectSelect& tz = page->getElement<AutoConnectSelect>("timezone");
+
+  String selected = tz.value();
+
+  for (uint8_t n = 0; n < sizeof(TZ) / sizeof(Timezone_t); n++) {
+    String  tzName = String(TZ[n].zone);
+    if (selected.equalsIgnoreCase(tzName)) {
+      Serial.println("Time zone: " + selected);
+      Serial.println("ntp server: " + String(TZ[n].ntpServer));
+      TZindex = n;
+      configTime(TZ[TZindex].tzoff * GMT_OFF_SEC, DLT_OFF_SEC, TZ[TZindex].ntpServer);
+      break;
+    }
+  }
+
+  AutoConnectText&  url = aux.getElement<AutoConnectText>("url");
+  url.value = String("http://") + WiFi.localIP().toString() + String("/dec4iot"); ;
+
+  return String("");
+}
+
+/// @brief  onConnect event handler
+/// @return void
+void onConnect(IPAddress& ipaddr) {
+  Serial.print("WiFi connected with ");
+  Serial.print(WiFi.SSID());
+  Serial.print(", IP:");
+  Serial.println(ipaddr.toString());
+}
 
 /// @brief  converts MAC address to string
 /// @return string
@@ -552,37 +758,6 @@ int next_index(s_device *device, long double tm) {
   return 0;
 }
 
-/// @brief  initialize WiFi and synchronize local time
-/// @return
-void start_wifi() {
-  int count = 0;
-  delay(100);
-
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
-  delay(100);
-  WiFi.begin(ssid, password);
-  Serial.print("connecting Wifi ");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    count++;
-    if (count == 20) {
-      break;
-    }
-  }
-  if (count < 20) {
-    Serial.println("");
-    Serial.print("connected to WiFi network with IP Address: ");
-    Serial.println(WiFi.localIP());
-    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-  } else {
-    Serial.println("");
-    Serial.println("WiFi not connected");
-  }
-  return;
-}
-
 /// @brief gets local epoch time
 /// @return time_t struct
 unsigned long get_epoch_time() {
@@ -639,6 +814,10 @@ void send_json(s_device *dev, s_data *mydata) {
       }
       {
         jsonb_object(&b, buf, ELEMENT_SIZE);
+        // HACK >>>
+        jsonb_key(&b, buf, ELEMENT_SIZE, "n", strlen("n"));
+        jsonb_string(&b, buf, ELEMENT_SIZE, "lat", strlen("lat"));
+        // <<<
         jsonb_key(&b, buf, ELEMENT_SIZE, "u", strlen("u"));
         jsonb_string(&b, buf, ELEMENT_SIZE, "lat", strlen("lat"));
         jsonb_key(&b, buf, ELEMENT_SIZE, "v", strlen("v"));
@@ -647,6 +826,10 @@ void send_json(s_device *dev, s_data *mydata) {
       }
       {
         jsonb_object(&b, buf, ELEMENT_SIZE);
+        // HACK >>>
+        jsonb_key(&b, buf, ELEMENT_SIZE, "n", strlen("n"));
+        jsonb_string(&b, buf, ELEMENT_SIZE, "lon", strlen("lon"));
+        // <<<
         jsonb_key(&b, buf, ELEMENT_SIZE, "u", strlen("u"));
         jsonb_string(&b, buf, ELEMENT_SIZE, "lon", strlen("lon"));
         jsonb_key(&b, buf, ELEMENT_SIZE, "v", strlen("v"));
@@ -683,12 +866,6 @@ void send_json(s_device *dev, s_data *mydata) {
     jsonb_array_pop(&b, buf, ELEMENT_SIZE);
   }
   Serial.printf("JSON:%s\n", buf);
-
-  // reconnect, if WiFi was lost
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("WiFi lost, trying to reconnect ...");
-    start_wifi();
-  }
 
   if (WiFi.status() == WL_CONNECTED) {
     char *url = NULL;
@@ -765,7 +942,7 @@ static void
 notifyBatteryCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
                       BLEAddress BLEAddr, uint8_t *pData, size_t length,
                       bool isNotify) {
-  BLEDevice::getScan()->stop();
+  //BLEDevice::getScan()->stop();
   long double ts = (long double)get_epoch_time();
   int i = index_by_mac(BLEAddr.toString().c_str());
   int j = next_index(&myDev[i], ts);
@@ -782,7 +959,7 @@ static void
 notifyTemperatureCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
                           BLEAddress BLEAddr, uint8_t *pData, size_t length,
                           bool isNotify) {
-  BLEDevice::getScan()->stop();
+  //BLEDevice::getScan()->stop();
   long double ts = (long double)get_epoch_time();
   int i = index_by_mac(BLEAddr.toString().c_str());
   int j = next_index(&myDev[i], ts);
@@ -798,7 +975,7 @@ static void
 notifyMovementCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
                        BLEAddress BLEAddr, uint8_t *pData, size_t length,
                        bool isNotify) {
-  BLEDevice::getScan()->stop();
+  //BLEDevice::getScan()->stop();
   long double ts = (long double)get_epoch_time();
   int i = index_by_mac(BLEAddr.toString().c_str());
   int j = next_index(&myDev[i], ts);
@@ -815,7 +992,7 @@ static void
 notifyButtonCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
                      BLEAddress BLEAddr, uint8_t *pData, size_t length,
                      bool isNotify) {
-  BLEDevice::getScan()->stop();
+  //BLEDevice::getScan()->stop();
   long double ts = (long double)get_epoch_time();
   int i = index_by_mac(BLEAddr.toString().c_str());
   int j = next_index(&myDev[i], ts);
@@ -1007,19 +1184,37 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 /// @brief ESP 32 device setup
 /// @return
 void setup() {
+  delay(1000);
   Serial.begin(115200);
 
-  // Watchdog Konfiguration
+  // Watchdog Configuration
   // Serial.println("configuring WatchDogTimer ...");
 
   // esp_task_wdt_init(WDT_TIMEOUT, true);
   // esp_task_wdt_add(NULL);
 
+  Serial.println();
+
+  Config.autoReset = false;     // Not reset the module even by intentional disconnection using AutoConnect menu.
+  Config.autoReconnect = true;  // Reconnect to known access points.
+  Config.reconnectInterval = 6; // Reconnection attempting interval is 3[min].
+  Config.retainPortal = true;   // Keep the captive portal open.
+  Config.homeUri="/_ac";
+  Config.title = "DEC4IOT";
+  Portal.config(Config);
+  Portal.load(FPSTR(AUX_DEC4IOT));
+
+  Portal.on("/dec4iot", loadOn, AC_EXIT_AHEAD);
+  Portal.on("/save", saveOn, AC_EXIT_AHEAD);
+
+  if (Portal.begin()) {
+    Serial.println("WiFi connected: " + WiFi.localIP().toString());
+    configTime(TZ[TZindex].tzoff * GMT_OFF_SEC, DLT_OFF_SEC, TZ[TZindex].ntpServer);
+  }
+
   Serial.printf("TIME [%.9e] HEAP [%lu] ", (long double)get_epoch_time(),
                 (unsigned long)ESP.getFreeHeap());
   Serial.println("starting Arduino BLE Client application...");
-
-  start_wifi();
 
   client = new WiFiClientSecure;
   client->setInsecure();
@@ -1045,6 +1240,9 @@ void setup() {
 /// @return
 void loop() {
   int i;
+
+  Portal.handleClient();
+
   // connect to BLE server
   for (i = 0; i < MAX_DEVICE; i++) {
     if (myDev[i].state == D_SCANNED) {
@@ -1074,10 +1272,8 @@ void loop() {
     Serial.println("ERROR: no free index");
   } else {
     Serial.printf("scanning ... [%d]\n", j);
-    BLEDevice::getScan()->start(10);
+    BLEDevice::getScan()->start(2);
   }
 
-  // delay between loops
-  delay(1000);
   // esp_task_wdt_reset();
 }
