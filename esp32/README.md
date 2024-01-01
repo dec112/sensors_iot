@@ -86,43 +86,83 @@ Two files in the project are sufficient to enable all functions of the ESP32 BLE
 - **json.h**: is an integrated library to provide essential JSON functionality for the project. The library was supplemented by the _jsonb_float()_ function.
 - **main.cpp**: includes ESP32 setup and loop functions as well as callback and help functions for operating the GW
 
-Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses (According to the standard, a maximum of 4 devices can be connected). It is therefore necessary to store these in the source code as shown below. In addition, a name of the GW **DEV_NAME** can be selected and an adjustment of the time zone **GMT_OFF_SEC** as well as summer or winter time **DLT_OFF_SEC** can be set
-```
-// adjust this part if necessary
-#define DEV_NAME "DEC112-BLE-Client"
-#define MAC_1 "68:72:c3:eb:8e:a9"
-#define MAC_2 "d6:ea:13:f5:11:3b"
-#define MAC_3 "fa:45:e3:78:45:ad"
-#define MAC_4 "cc:e0:e7:20:43:85"
-#define URL_PREFIX "https://"
-#define GMT_OFF_SEC 3600
-#define DLT_OFF_SEC 0
-//
-```
-
-
-Finally, the data for the WiFi used must be entered and then the firmware can be built and uploaded. For permanent monitoring, the monitoring option from PlatformIO (VS Code) is recommended. 
-```
-// adjust this part if necessary
-const char *ssid = "xxxxxx";
-const char *password = "xxxxxx";
-const char *ntpServer = "pool.ntp.org";
-```
+Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses (According to the standard, a maximum of 4 devices can be connected). For further details how to configure the ESP32 via a captive portal refer to _User Information_ below.
 
 ## User Information
 
-
 ### Captive Portal
 
-<img align="center" src="https://raw.githubusercontent.com/dec112/dc-iot/main/app/assets/images/system.png" height="400">
+The first step is to select the ESP32 WiFi (ssid: esp32ap; password: 12345678) on the laptop or mobile device. Depending on the operating system, you will be prompted to log in to the portal (login page), see the figures below:
 
+<img align="center" src="images/cp_select_nw_browser.png" height="20">
+
+<br>
+
+<img align="center" src="images/cp_select_nw.png" height="50">
+
+<br>
+
+After successful login the following page appears:
+
+<img align="center" src="images/cp_default_home.png" height="250">
+
+<br>
+
+Use the _Configure new AP_ menu to select a local WiFi from the list (to specify a static IP address, clear the _Enable DHCP_ checkbox.) and log in with the local password, as shown below:
+
+<img align="center" src="images/cp_select_ap.png" height="250">
+
+<br>
+
+The following page is shown during the configuration:
+
+<img align="center" src="images/cp_wait_ap.png" height="250">
+
+<br>
+
+If the new WiFi has been successfully configured, the following information page is displayed. The line with the IP address is important - copy this address and create the following URL: _http://\<ip-addr\>/dec4iot_; in the example shown, this is _http://10.0.0.96/dec4iot_
+
+<img align="center" src="images/cp_done_ap.png" height="250">
+
+<br>
 
 ### MAC Address Filter
 
+Now you can switch to the local network (_Established Connection_) to configure the local time zone and the MAC addresses (puck.js)
+
+<img align="center" src="images/cp_config_mac.png" height="250">
+
+<br>
+
+After clicking the Save button, the following page will appear after successful saving. From now on, the system searches for configured puck.js and establishes a BLE connection if necessary (i.e. if the MAC address matches).
+
+<img align="center" src="images/cp_saved_mac.png" height="250">
+
+<br>
 
 ## Issues
 
-## About
+The current version does not save configured puck.js MAC addresses permanently, i.e. they must be reconfigured after a restart of the ESP32. The last selected WiFi remains saved.
+
+Please report bugs and suggestions for new features using the [GitHub Issue-Tracker](https://github.com/dec112/dc-iot/issues) and follow the [Contributor Guidelines](https://github.com/twbs/ratchet/blob/master/CONTRIBUTING.md).
+
+If you want to contribute, please follow these steps:
+
+1. Fork it!
+2. Create a feature branch: `git checkout -b my-new-feature`
+3. Commit changes: `git commit -am 'Add some feature'`
+4. Push into branch: `git push origin my-new-feature`
+5. Send a Pull Request
+
+&nbsp;    
+
+## About  
+
+<img align="right" src="https://raw.githubusercontent.com/dec112/dc-iot/main/app/assets/images/netidee.jpeg" height="150">This project has received funding from [Netidee Call 17](https://netidee.at).
+
+<br clear="both" />
 
 ## License
+
+[MIT License 2023 - DEC112](https://raw.githubusercontent.com/dec112/dc-iot/main/LICENSE)
 
