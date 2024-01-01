@@ -3,11 +3,16 @@ This repository provides a comprehensive solution for monitoring IoT devices, wi
 
 <img align="center" src="https://raw.githubusercontent.com/dec112/dc-iot/main/app/assets/images/system.png" height="400">
 
+<br>
+
 Content:
 * [Further Resources](#further-resources)
 * [Developer Information](#developer-information)
-    * [Deployment](#deployment)
-    * [Sample Data and Typical Workflow](#sample-data-and-typical-workflow)
+    * [ESP32-HW](#esp32-hw)
+    * [IDE](#ide)
+* [User Information](#user-information)
+    * [Captive Portal](#captive-portal)
+    * [MAC Address Filter](#mac-address-filter)
 * [Issues](#issues)
 * [About](#about)
 * [License](#license)
@@ -17,7 +22,7 @@ Content:
 * Semantic Container: https://github.com/OwnYourData/semcon    
 * Blogpost on Monitoring (in German): https://www.netidee.at/dec4iot/system-monitoring-fuer-dec4iot
 
-## Developer and User Information
+## Developer Information
 
 ### ESP32-HW
 
@@ -71,7 +76,8 @@ board = nodemcu-32s
 framework = arduino
 monitor_speed = 115200
 upload_port = /dev/ttyUSB*
-board_build.partitions = huge_app.csv
+board_build.partitions = no_ota.csv
+lib_deps = hieromon/AutoConnect@^1.4.2
 `````
 
 ### ESP32-SW
@@ -103,4 +109,20 @@ const char *password = "xxxxxx";
 const char *ntpServer = "pool.ntp.org";
 ```
 
+## User Information
+
+
+### Captive Portal
+
+<img align="center" src="https://raw.githubusercontent.com/dec112/dc-iot/main/app/assets/images/system.png" height="400">
+
+
+### MAC Address Filter
+
+
+## Issues
+
+## About
+
+## License
 

@@ -263,6 +263,7 @@ char myMacs[MAX_DEVICE][MAC_SIZE] = {MAC_1, MAC_2, MAC_3, MAC_4};
 static location_t location;
 static s_device myDev[MAX_DEVICE];
 static boolean doScan = false;
+static boolean isConfigured = false;
 static WiFiClientSecure *client;
 static HTTPClient http;
 
@@ -270,6 +271,8 @@ AutoConnect Portal;
 AutoConnectConfig Config;
 
 // BLE Service
+BLEScan *pBLEScan = NULL;
+
 // Service UUID
 static BLEUUID serviceUUID("34defd2c-c8fe-b18e-9a70-591970cba32b");
 
@@ -336,6 +339,9 @@ String saveOn(AutoConnectAux& aux, PageArgument& args) {
   AutoConnectText&  url = aux.getElement<AutoConnectText>("url");
   url.value = String("http://") + WiFi.localIP().toString() + String("/dec4iot"); ;
 
+  pBLEScan->setActiveScan(true);
+  isConfigured = true;
+  
   return String("");
 }
 
@@ -1229,11 +1235,11 @@ void setup() {
 
   BLEDevice::init(DEV_NAME);
 
-  BLEScan *pBLEScan = BLEDevice::getScan();
+  pBLEScan = BLEDevice::getScan();
   pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
   pBLEScan->setInterval(1349);
   pBLEScan->setWindow(449);
-  pBLEScan->setActiveScan(true);
+  pBLEScan->setActiveScan(false);
 }
 
 /// @brief ESP 32 main loop
@@ -1243,36 +1249,38 @@ void loop() {
 
   Portal.handleClient();
 
-  // connect to BLE server
-  for (i = 0; i < MAX_DEVICE; i++) {
-    if (myDev[i].state == D_SCANNED) {
-      Serial.printf("connecting ... [%d]\n", i);
-      connectToServer();
+  if (isConfigured) {
+    // connect to BLE server
+    for (i = 0; i < MAX_DEVICE; i++) {
+      if (myDev[i].state == D_SCANNED) {
+        Serial.printf("connecting ... [%d]\n", i);
+        connectToServer();
+      }
     }
-  }
-  // check for JSON data to send
-  for (i = 0; i < MAX_DEVICE; i++) {
-    if (myDev[i].state == D_CONNECTED) {
-      Serial.printf("checking data ... [%d]\n", i);
-      for (int j = 0; j < MAX_POOL; j++) {
-        s_data *d = &(myDev[i].data[j]);
-        if (check_data(d)) {
-          Serial.printf("TIME [%.9e] HEAP [%lu]\n", d->tm,
-                        (unsigned long)ESP.getFreeHeap());
-          send_json(&myDev[i], d);
-          reset_data(d);
+    // check for JSON data to send
+    for (i = 0; i < MAX_DEVICE; i++) {
+      if (myDev[i].state == D_CONNECTED) {
+        Serial.printf("checking data ... [%d]\n", i);
+        for (int j = 0; j < MAX_POOL; j++) {
+          s_data *d = &(myDev[i].data[j]);
+          if (check_data(d)) {
+            Serial.printf("TIME [%.9e] HEAP [%lu]\n", d->tm,
+                          (unsigned long)ESP.getFreeHeap());
+            send_json(&myDev[i], d);
+            reset_data(d);
+          }
         }
       }
     }
-  }
-  // start scan if we can connect a new device
-  // (after disconnect or if no device is connected)
-  int j = index_by_state(D_DISCONNECTED);
-  if (j == NO_INDEX) {
-    Serial.println("ERROR: no free index");
-  } else {
-    Serial.printf("scanning ... [%d]\n", j);
-    BLEDevice::getScan()->start(2);
+    // start scan if we can connect a new device
+    // (after disconnect or if no device is connected)
+    int j = index_by_state(D_DISCONNECTED);
+    if (j == NO_INDEX) {
+      Serial.println("ERROR: no free index");
+    } else {
+      Serial.printf("scanning ... [%d]\n", j);
+      BLEDevice::getScan()->start(2);
+    }
   }
 
   // esp_task_wdt_reset();
