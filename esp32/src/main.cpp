@@ -42,6 +42,7 @@
 #include <AutoConnect.h>
 #include <AutoConnectFS.h>
 #include <esp_task_wdt.h>
+#include <Preferences.h>
 
 #include "json.h"
 
@@ -63,7 +64,7 @@
 // adjust this part if necessary
 #define DEV_NAME "DEC112-BLE-Client"
 #define MAC_1 "68:72:c3:eb:8e:a9"
-#define MAC_2 "d6:ea:13:f5:11:3b"
+#define MAC_2 "e6:ea:13:f5:11:3b"
 #define MAC_3 "fa:45:e3:78:45:ad"
 #define MAC_4 "cc:e0:e7:20:43:85"
 #define URL_PREFIX "https://"
@@ -267,8 +268,12 @@ static boolean isConfigured = false;
 static WiFiClientSecure *client;
 static HTTPClient http;
 
+// AutoConnect
 AutoConnect Portal;
 AutoConnectConfig Config;
+
+// EEPROM storage
+Preferences pref;
 
 // BLE Service
 BLEScan *pBLEScan = NULL;
@@ -287,6 +292,47 @@ static BLEUUID btnCharacteristicUUID("2ae2");
 static BLEUUID movCharacteristicUUID("2c01");
 
 /***************************************************************** FUNCTIONS */
+
+/// @brief  load MAC addresses from preferences (EEPROM)
+/// @return int (1 if success; otherwise 0)
+int getMACs(void) {
+
+  size_t len = 0;
+  int ret = 0;
+
+  char tmp[MAC_SIZE];
+
+  len = pref.getString("mac0", tmp, MAC_SIZE);
+  if (len > 0) {
+    memcpy(myMacs[0], (const char*)tmp, MAC_SIZE);
+    Serial.printf("MAC0: %s\n", myMacs[0]);
+    len = 0;
+    ret = 1;
+  }
+  len = pref.getString("mac1", tmp, MAC_SIZE);
+  if (len > 0) {
+    memcpy(myMacs[1], (const char*)tmp, MAC_SIZE);
+    Serial.printf("MAC1: %s\n", myMacs[1]);
+    len = 0;
+    ret = 1;
+  }
+  len = pref.getString("mac2", tmp, MAC_SIZE);
+  if (len > 0) {
+    memcpy(myMacs[2], (const char*)tmp, MAC_SIZE);
+    Serial.printf("MAC2: %s\n", myMacs[2]);
+    len = 0;
+    ret = 1;
+  }
+  len = pref.getString("mac3", tmp, MAC_SIZE);
+  if (len > 0) {
+    memcpy(myMacs[3], (const char*)tmp, MAC_SIZE);
+    Serial.printf("MAC3: %s\n", myMacs[3]);
+    len = 0;
+    ret = 1;
+  }
+
+  return ret;
+}
 
 /// @brief  loadOn event handler
 /// @return string
@@ -312,14 +358,22 @@ String saveOn(AutoConnectAux& aux, PageArgument& args) {
   AutoConnectInput& mac3 = page->getElement<AutoConnectInput>("mac3");
   AutoConnectInput& mac4 = page->getElement<AutoConnectInput>("mac4");
 
-  if (mac1.value)
+  if (mac1.value) {
     memcpy(myMacs[0], (const char*)mac1.value.c_str(), MAC_SIZE);
-  if (mac2.value)
+    pref.putString("mac0", myMacs[0]);
+  }
+  if (mac2.value) {
     memcpy(myMacs[1], (const char*)mac2.value.c_str(), MAC_SIZE);
-  if (mac2.value)
+    pref.putString("mac1", myMacs[1]);
+  }
+  if (mac2.value) {
     memcpy(myMacs[2], (const char*)mac3.value.c_str(), MAC_SIZE);
-  if (mac3.value)
+    pref.putString("mac2", myMacs[2]);
+  }
+  if (mac3.value) {
     memcpy(myMacs[3], (const char*)mac4.value.c_str(), MAC_SIZE);
+    pref.putString("mac3", myMacs[3]);
+  }
 
   AutoConnectSelect& tz = page->getElement<AutoConnectSelect>("timezone");
 
@@ -1201,6 +1255,10 @@ void setup() {
 
   Serial.println();
 
+  if (pref.begin("dec4iot", false)) {
+    Serial.println("EEPROM storage initialized");
+  }
+
   Config.autoReset = false;     // Not reset the module even by intentional disconnection using AutoConnect menu.
   Config.autoReconnect = true;  // Reconnect to known access points.
   Config.reconnectInterval = 6; // Reconnection attempting interval is 3[min].
@@ -1239,7 +1297,15 @@ void setup() {
   pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
   pBLEScan->setInterval(1349);
   pBLEScan->setWindow(449);
-  pBLEScan->setActiveScan(false);
+
+  if (getMACs() == 1) {
+    isConfigured = true;
+    pBLEScan->setActiveScan(true);
+    Serial.println("BLE MACs found!");
+  } else {
+    pBLEScan->setActiveScan(false);
+    Serial.println("BLE MACs not found!");
+  }
 }
 
 /// @brief ESP 32 main loop

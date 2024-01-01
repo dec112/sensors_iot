@@ -1,5 +1,5 @@
 
-This repository provides a comprehensive solution for monitoring IoT devices, with this part describing the ESP32 BLE/WiFi Gateway. With this software, users can integrate sensors (Puck.js) and monitor the status, performance, and any anomalies. The system continuously collects data from the connected devices and analyzes it to determine if they are functioning correctly or if potential problems might arise. Upon detecting unusual activities or when device parameters fall outside the established normal range, alarms are immediately triggered. These alerts can be relayed through various channels such as email, or alerting through the DEC112 ESInet. The repository includes both the code for data collection and analysis, as well as a user-friendly interface for configuring monitoring settings and alarm conditions. The aim of this project is to provide a robust and scalable solution to ensure the efficiency and security of IoT networks. The current repository includes the ESP32 BLE/WiFi Gateway as shown in the figure below.
+This repository provides a comprehensive solution for monitoring IoT devices, with this part describing the ESP32 BLE/WiFi Gateway. With this software, users can integrate sensors (Puck.js) and monitor the status, performance, and any anomalies. The system continuously collects data from the connected devices and analyzes it to determine if they are functioning correctly or if potential problems might arise. Upon detecting unusual activities or when device parameters fall outside the established normal range, alarms are immediately triggered. These alerts can be relayed through various channels such as email, or alerting through the DEC112 ESInet. The repository includes both the code for data collection and analysis, as well as a user-friendly interface for configuring monitoring settings and alarm conditions. This project aims to provide a robust and scalable solution to ensure the efficiency and security of IoT networks. The current repository includes the ESP32 BLE/WiFi Gateway as shown in the figure below.
 
 <img align="center" src="https://raw.githubusercontent.com/dec112/dc-iot/main/app/assets/images/system.png" height="400">
 
@@ -32,7 +32,7 @@ We recommend the following hardware for this project: [ESP32 NodeMCU](https://ww
 
 The ESP32 BLE/WiFi Gateway was created with [PlatformIO IDE](https://platformio.org/) and VS Code (alternatively, [Arduino IDE](https://www.arduino.cc/en/software) can also be used). Besides the platform 'espressif32', the board 'nodemcu-32s' and the 'arduino' framework, no further libraries are necessary. The following additions are required:
 
-- to support MAC in Notfiy callback, following changes are required in
+- to support MAC in Notfiy callback, the following changes are required in
 
 _BLERemoteCharacteristic.h_
 `````
@@ -83,10 +83,10 @@ lib_deps = hieromon/AutoConnect@^1.4.2
 ### ESP32-SW
 
 Two files in the project are sufficient to enable all functions of the ESP32 BLE/Wifi GW:
-- **json.h**: is an integrated library to provide essential JSON functionality for the project. The library was supplemented by the _jsonb_float()_ function.
+- **json.h**: is an integrated library to provides essential JSON functionality for the project. The library was supplemented by the _jsonb_float()_ function.
 - **main.cpp**: includes ESP32 setup and loop functions as well as callback and help functions for operating the GW
 
-Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses (According to the standard, a maximum of 4 devices can be connected). For further details how to configure the ESP32 via a captive portal refer to _User Information_ below.
+Since a connection can be initiated with any BLE device, we filter our devices (Puck.js) based on their MAC addresses (According to the standard, a maximum of 4 devices can be connected). The current version saves configured puck.js MAC addresses permanently in the ESP32 EEPROM, i.e. reconfiguration after a restart of the ESP32 is not necessary. The last selected WiFi also remains saved. Further details on configuring the ESP32 via a captive portal can be found under _User information_ below.
 
 ## User Information
 
@@ -141,8 +141,6 @@ After clicking the Save button, the following page will appear after successful 
 <br>
 
 ## Issues
-
-The current version does not save configured puck.js MAC addresses permanently, i.e. they must be reconfigured after a restart of the ESP32. The last selected WiFi remains saved.
 
 Please report bugs and suggestions for new features using the [GitHub Issue-Tracker](https://github.com/dec112/dc-iot/issues) and follow the [Contributor Guidelines](https://github.com/twbs/ratchet/blob/master/CONTRIBUTING.md).
 
